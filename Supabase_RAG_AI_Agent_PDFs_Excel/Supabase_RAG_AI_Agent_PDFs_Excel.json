@@ -293,29 +293,29 @@
           }
         }
       },
-      "id": "d0951fcf-a3d9-41b9-8c37-811b5b750a94",
+      "id": "c12b3bef-0d49-41e7-af56-cd9cc4df9af5",
       "name": "Default Data Loader",
       "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
       "typeVersion": 1,
       "position": [
-        1000,
-        360
+        1100,
+        760
       ]
     },
     {
       "parameters": {
         "content": "## Tool to Add a Google Drive File to Vector DB",
-        "height": 667.1104380931955,
-        "width": 2352.5048970686776,
+        "height": 1067,
+        "width": 2553,
         "color": 5
       },
-      "id": "879f07df-f12b-40c0-8f2b-eb753a048bf5",
+      "id": "dc217a27-d2d7-427a-bb0d-86face3a24d0",
       "name": "Sticky Note1",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -1060,
-        80
+        -1180,
+        0
       ]
     },
     {
@@ -334,12 +334,12 @@
           }
         }
       },
-      "id": "85e02573-31fc-4feb-b84d-fe5e373f83d8",
+      "id": "45c821f4-d95c-419b-827e-04c1c7e2ccb5",
       "name": "Download File",
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
       "position": [
-        -240,
+        -160,
         320
       ],
       "executeOnce": true,
@@ -370,13 +370,13 @@
         "event": "fileCreated",
         "options": {}
       },
-      "id": "1afb83c8-c1ff-48fe-8fae-1ca93c31e0a7",
+      "id": "cd480155-4cdd-4c4d-81a7-989aed6ec141",
       "name": "File Created",
       "type": "n8n-nodes-base.googleDriveTrigger",
       "typeVersion": 1,
       "position": [
-        -1000,
-        220
+        -1140,
+        100
       ],
       "credentials": {
         "googleDriveOAuth2Api": {
@@ -405,13 +405,13 @@
         "event": "fileUpdated",
         "options": {}
       },
-      "id": "1cda2e55-13d0-41bc-857c-dcc1788d7ad3",
+      "id": "a0003237-bf19-4ff6-8f20-fb3115a5d031",
       "name": "File Updated",
       "type": "n8n-nodes-base.googleDriveTrigger",
       "typeVersion": 1,
       "position": [
-        -1000,
-        440
+        -1140,
+        240
       ],
       "credentials": {
         "googleDriveOAuth2Api": {
@@ -425,12 +425,12 @@
         "operation": "text",
         "options": {}
       },
-      "id": "af64cbc3-57a6-4037-967e-6f5f89dbdf15",
+      "id": "ccb90387-537d-4162-8ae4-d15a395fd9a0",
       "name": "Extract Document Text",
       "type": "n8n-nodes-base.extractFromFile",
       "typeVersion": 1,
       "position": [
-        520,
+        600,
         520
       ],
       "alwaysOutputData": true
@@ -442,12 +442,12 @@
         "filterType": "string",
         "filterString": "=metadata->>file_id=like.*{{ $json.file_id }}*"
       },
-      "id": "ec1fcbc9-9aa3-42d9-bce8-2cecd783e25a",
+      "id": "964c99e8-b449-46a3-b59a-fb347a4235be",
       "name": "Delete Old Doc Rows",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -480,
+        -400,
         320
       ],
       "alwaysOutputData": true,
@@ -478,12 +478,12 @@
         },
         "options": {}
       },
-      "id": "1ee8603d-d0a2-4d92-9f08-7ce6419ad8ac",
+      "id": "f3a64d33-3f70-4857-a752-78c0e9fda600",
       "name": "Set File ID",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -720,
+        -640,
         320
       ]
     },
@@ -492,12 +492,12 @@
         "operation": "pdf",
         "options": {}
       },
-      "id": "d016f613-3db9-44e1-91bc-c7a90503c0db",
+      "id": "2a56becc-d2ec-4fa0-b7a5-82e3f194f100",
       "name": "Extract PDF Text",
       "type": "n8n-nodes-base.extractFromFile",
       "typeVersion": 1,
       "position": [
-        520,
+        600,
         140
       ]
     },
@@ -506,24 +506,24 @@
         "aggregate": "aggregateAllItemData",
         "options": {}
       },
-      "id": "6b8c5a17-455b-444e-9bbf-97faf2c89dd4",
+      "id": "a5f88a8b-cf19-468e-a43c-10794072eee0",
       "name": "Aggregate",
       "type": "n8n-nodes-base.aggregate",
       "typeVersion": 1,
       "position": [
-        440,
+        520,
         320
       ]
     },
     {
       "parameters": {},
-      "id": "472771ec-3564-48ac-be48-dfbe46fb684b",
+      "id": "59853d86-034f-41a3-8b84-a96b5807857c",
       "name": "Character Text Splitter",
       "type": "@n8n/n8n-nodes-langchain.textSplitterCharacterTextSplitter",
       "typeVersion": 1,
       "position": [
-        1000,
-        580
+        1160,
+        920
       ]
     },
     {
@@ -538,12 +538,12 @@
         },
         "options": {}
       },
-      "id": "5d4f1692-9914-42af-a3a2-27415e24d716",
+      "id": "155931d2-e6e1-46d1-83c0-fe02a829c1cb",
       "name": "Summarize",
       "type": "n8n-nodes-base.summarize",
       "typeVersion": 1,
       "position": [
-        600,
+        660,
         320
       ]
     },
@@ -556,7 +556,8 @@
                 "options": {
                   "caseSensitive": true,
                   "leftValue": "",
-                  "typeValidation": "strict"
+                  "typeValidation": "strict",
+                  "version": 1
                 },
                 "conditions": [
                   {
@@ -565,7 +566,8 @@
                     "operator": {
                       "type": "string",
                       "operation": "equals"
-                    }
+                    },
+                    "id": "26dfce6a-5f2f-4196-b557-00a5f0c91acb"
                   }
                 ],
                 "combinator": "and"
@@ -576,7 +578,8 @@
                 "options": {
                   "caseSensitive": true,
                   "leftValue": "",
-                  "typeValidation": "strict"
+                  "typeValidation": "strict",
+                  "version": 1
                 },
                 "conditions": [
                   {
@@ -598,7 +601,8 @@
                 "options": {
                   "caseSensitive": true,
                   "leftValue": "",
-                  "typeValidation": "strict"
+                  "typeValidation": "strict",
+                  "version": 1
                 },
                 "conditions": [
                   {
@@ -621,12 +625,12 @@
           "fallbackOutput": 2
         }
       },
-      "id": "71d79efa-e252-480d-968f-5907e5cb4ea4",
+      "id": "d22bf3e0-e812-4015-8fd0-68d7b61b6db6",
       "name": "Switch",
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3,
       "position": [
-        -20,
+        60,
         320
       ]
     },
@@ -643,13 +647,13 @@
           "queryName": "match_documents"
         }
       },
-      "id": "bb0d0cdc-f651-4c95-8711-312b942a7b50",
+      "id": "ab95b16c-3e94-4a2f-9d58-7973cfb2e258",
       "name": "Insert into Supabase Vectorstore",
       "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
       "typeVersion": 1,
       "position": [
-        880,
-        140
+        980,
+        540
       ],
       "credentials": {
         "supabaseApi": {
@@ -663,14 +667,27 @@
         "operation": "xlsx",
         "options": {}
       },
-      "id": "32253288-cec7-45df-9652-112892b506b5",
+      "id": "7c792b02-6204-46af-8b5f-7c2fd033d280",
       "name": "Extract from Excel",
       "type": "n8n-nodes-base.extractFromFile",
       "typeVersion": 1,
       "position": [
-        280,
+        360,
         320
       ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -840,
+        180
+      ],
+      "id": "db574f07-071e-42f7-bb75-092bc6b9b0bb",
+      "name": "Loop Over Items"
     },
     {
       "parameters": {
@@ -679,10 +696,10 @@
       "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
       "typeVersion": 1,
       "position": [
-        840,
-        380
+        920,
+        800
       ],
-      "id": "158788d3-0539-4238-8557-7b488ca23a36",
+      "id": "1b98c48f-231f-484a-81b8-7d7d164e2db3",
       "name": "Embeddings Google Gemini1",
       "credentials": {
         "googlePalmApi": {
@@ -841,7 +858,7 @@
       "main": [
         [
           {
-            "node": "Set File ID",
+            "node": "Loop Over Items",
             "type": "main",
             "index": 0
           }
@@ -852,7 +869,7 @@
       "main": [
         [
           {
-            "node": "Set File ID",
+            "node": "Loop Over Items",
             "type": "main",
             "index": 0
           }
@@ -961,11 +978,34 @@
         ]
       ]
     },
+    "Insert into Supabase Vectorstore": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "Extract from Excel": {
       "main": [
         [
           {
             "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Set File ID",
             "type": "main",
             "index": 0
           }
@@ -988,7 +1028,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "3547fc97-110d-4bc6-92a1-ffa7fe9d9817",
+  "versionId": "cc0f8a1d-a7b3-4d54-bed7-755458eb691a",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "8c696b81bfac397abd6a06257a4f4efb640f3afe0ae614f7be9575b0171992c5"
