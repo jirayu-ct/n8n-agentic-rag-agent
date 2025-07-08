@@ -1,0 +1,593 @@
+{
+  "name": "translate",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Tool to Add a Google Drive File to Vector DB",
+        "height": 1067,
+        "width": 2553,
+        "color": 5
+      },
+      "id": "63f511f2-d33a-4d03-9129-1d11b255bca5",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1040,
+        -520
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $('Set File ID').item.json.file_id }}",
+          "mode": "id"
+        },
+        "options": {
+          "googleFileConversion": {
+            "conversion": {
+              "docsToFormat": "text/plain"
+            }
+          }
+        }
+      },
+      "id": "33f7e7c3-d544-47b6-a2cb-febd46bb7dcf",
+      "name": "Download File",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -500,
+        -180
+      ],
+      "executeOnce": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "5bFrqLgtyXmdET52",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "__rl": true,
+          "value": "1pUdRaurxJlsRB-OTc0Zupf9oDYY-V6gd",
+          "mode": "list",
+          "cachedResultName": "slide_netword",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1pUdRaurxJlsRB-OTc0Zupf9oDYY-V6gd"
+        },
+        "event": "fileCreated",
+        "options": {}
+      },
+      "id": "15905d3b-2f2c-4e5e-b805-179ef7c37fb7",
+      "name": "File Created",
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [
+        -980,
+        -260
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "5bFrqLgtyXmdET52",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "__rl": true,
+          "value": "1pUdRaurxJlsRB-OTc0Zupf9oDYY-V6gd",
+          "mode": "list",
+          "cachedResultName": "slide_netword",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1pUdRaurxJlsRB-OTc0Zupf9oDYY-V6gd"
+        },
+        "event": "fileUpdated",
+        "options": {}
+      },
+      "id": "9c74a980-9e68-43f2-9af8-c7067e98fbd6",
+      "name": "File Updated",
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [
+        -980,
+        -120
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "5bFrqLgtyXmdET52",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "10646eae-ae46-4327-a4dc-9987c2d76173",
+              "name": "file_id",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "f4536df5-d0b1-4392-bf17-b8137fb31a44",
+              "name": "file_type",
+              "value": "={{ $json.mimeType }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "68aa8c94-57e3-45fa-98ff-b972a3f93c6a",
+      "name": "Set File ID",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -720,
+        -180
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "id": "dabd4006-d266-4105-a59f-3f8e52710dee",
+      "name": "Extract PDF Text",
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        40,
+        -200
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Set File ID').item.json.file_type }}",
+                    "rightValue": "application/pdf",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "26dfce6a-5f2f-4196-b557-00a5f0c91acb"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "id": "2ae7faa7-a936-4621-a680-60c512163034",
+                    "leftValue": "={{ $('Set File ID').item.json.file_type }}",
+                    "rightValue": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "id": "fc193b06-363b-4699-a97d-e5a850138b0e",
+                    "leftValue": "={{ $('Set File ID').item.json.file_type }}",
+                    "rightValue": "application/vnd.google-apps.document",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": 2
+        }
+      },
+      "id": "dc81c7b2-3279-4a08-97c8-3ad2f1503751",
+      "name": "Switch",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [
+        -280,
+        -180
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.text }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are an intelligent Content Extractor and Translator. Your purpose is to process raw text copied from a technical PDF, create a clean narrative script suitable for a voice-over, and translate it into Thai.\n\nYour primary mission is to analyze the provided text, extract ONLY the main explanatory content, and then translate that extracted content into fluent, formal Thai for an educational audio track.\n\nFollow these strict rules:\n\n1.  **IDENTIFY AND EXTRACT NARRATIVE CONTENT:** Your first job is to identify and isolate only the core teaching material. This includes:\n    *   Headings and subheadings (e.g., \"Chapter 3: Basic Device Configuration\").\n    *   Full paragraphs of explanatory text.\n    *   Descriptive list items (bullet points or numbered lists).\n\n2.  **AGGRESSIVELY IGNORE AND DISCARD NON-NARRATIVE DATA:** You MUST completely ignore and remove the following types of \"junk\" text before translation. DO NOT include them in the final output:\n    *   Copyright notices (e.g., \"© 2016 Cisco and/or its affiliates. All rights reserved. Cisco Confidential\").\n    *   Page numbers, headers, and footers.\n    *   Standalone numerical data that looks like table content or configuration values (e.g., \"/30 255.255.255.252\", \"64 2\", etc.).\n    *   Garbled text or conversion artifacts (e.g., \"nnnnnnnn.nnnnnnnn...\", \"11111111.11111111...\").\n    *   Repetitive navigation elements or menu items.\n\n3.  **HANDLE CODE AND COMMANDS:** Do NOT translate any text that is a CLI command, script, or system output (e.g., `show ip interface brief`, `Router(config)#`). These must be kept in the original English. However, you MUST translate the surrounding sentences that explain what the command does.\n\n4.  **FINAL OUTPUT REQUIREMENTS:** Your response MUST BE ONLY the clean, translated Thai text.\n    *   NO greetings, no explanations, no comments about your process (e.g., \"Here is the extracted and translated text...\").\n    *   The output must be pure, continuous prose, ready to be fed directly into a Text-to-Speech (TTS) engine.\n    *   Maintain the original paragraph structure of the extracted content."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        260,
+        -200
+      ],
+      "id": "db95b945-596b-4aab-9b67-6df75444be19",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-pro",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        260,
+        0
+      ],
+      "id": "f53e3f43-385d-4ef2-9534-44bd2e1cdff0",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "YhoTjcq52WxpaeHa",
+          "name": "n8n_tutorrail"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6266e381-30ba-445d-8b5a-d473fec89965",
+              "name": "text_thai",
+              "value": "={{ $json.output }}",
+              "type": "string"
+            },
+            {
+              "id": "83fdede1-eb75-436f-b739-3d6d2dbd5e4c",
+              "name": "file_name",
+              "value": "={{ $('Extract PDF Text').item.json.info.Title }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -740,
+        180
+      ],
+      "id": "357ddf1f-247c-43dd-9fde-ad43f0d52eae",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"gemini-2.5-flash-preview-tts\",\n  \"contents\": [\n    {\n      \"parts\": [\n        {\n          \"text\": \"{{ $json.data }}\"\n        }\n      ]\n    }\n  ],\n  \"generationConfig\": {\n    \"responseModalities\": [\n      \"AUDIO\"\n    ],\n    \"speechConfig\": {\n      \"voiceConfig\": {\n        \"prebuiltVoiceConfig\": {\n          \"voiceName\": \"Rasalgethi\"\n        }\n      }\n    }\n  }\n}",
+        "options": {
+          "timeout": 1800000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -40,
+        180
+      ],
+      "id": "b6a3c8f1-97f8-4312-831b-2d4c72e0c4ad",
+      "name": "HTTP Request",
+      "retryOnFail": false,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "4SMoIR6NnSO75VXF",
+          "name": "x-goog-api-key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1oEiGaO7HFouMxh3HWtUBu9UHlQ_nzGq7",
+          "mode": "list",
+          "cachedResultName": "sound_vedio_network",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1oEiGaO7HFouMxh3HWtUBu9UHlQ_nzGq7"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        440,
+        180
+      ],
+      "id": "3940a005-8a1b-46d2-a63b-cad70d50f831",
+      "name": "Upload file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "5bFrqLgtyXmdET52",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// ดึงข้อมูลทั้งหมดที่เข้ามาเป็น Array\nconst allItems = $input.all();\n\n// ใช้ .map เพื่อวนลูปทำงานกับทุก item ใน Array\nreturn allItems.map(item => {\n  // 1. ดึงค่า text_thai จาก item ปัจจุบัน\n  let textToFormat = item.json.text_thai;\n\n  // 2. จัดการ format ตามที่คุณต้องการ\n  //    - ลบตัวขึ้นบรรทัดใหม่ (\\n)\n  textToFormat = textToFormat.replace(/\\n/g, \"\");\n  //    - เปลี่ยนเครื่องหมายคำพูด \" ให้เป็น “ และ ”\n  let quoteIndex = 0;\n  let formattedText = textToFormat.replace(/\"/g, () => (quoteIndex++ % 2 === 0 ? \"“\" : \"”\"));\n\n  // 3. ส่งข้อมูลกลับไป โดยยังคงข้อมูลเก่าไว้ทั้งหมด (...item.json)\n  //    และเพิ่ม field ใหม่ชื่อ formatted_thai เข้าไป\n  return {\n    json: {\n      ...item.json,\n      formatted_thai: formattedText\n    }\n  }\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -500,
+        180
+      ],
+      "id": "72b52b26-5b43-4c53-b26f-8a5311c19e2f",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e1305d98-b92f-4ada-8886-5e5630a4f0a7",
+              "name": "data",
+              "value": "=บทที่ 11: การกำหนดแอดเดรส IPv4วัตถุประสงค์ของบทเรียนชื่อบทเรียน: การกำหนดแอดเดรส IPv4วัตถุประสงค์ของบทเรียน: คำนวณแผนการทำซับเน็ต IPv4 เพื่อแบ่งส่วนเครือข่ายของคุณอย่างมีประสิทธิภาพหัวข้อเรื่อง วัตถุประสงค์ของหัวข้อโครงสร้างของแอดเดรส IPv4 อธิบายโครงสร้างของแอดเดรส IPv4 รวมถึงส่วนเครือข่าย ส่วนโฮสต์ และซับเน็ตมาสก์IPv4 Unicast, Broadcast และ Multicast เปรียบเทียบลักษณะและการใช้งานของแอดเดรส IPv4 แบบยูนิคาสต์ บรอดคาสต์ และมัลติคาสต์ประเภทของแอดเดรส IPv4 อธิบายแอดเดรส IPv4 สาธารณะ ส่วนตัว และที่สงวนไว้การแบ่งส่วนเครือข่าย อธิบายว่าการทำซับเน็ตแบ่งส่วนเครือข่ายอย่างไรเพื่อช่วยให้การสื่อสารดีขึ้นการทำซับเน็ตเครือข่าย IPv4 คำนวณซับเน็ต IPv4 สำหรับพรีฟิกซ์ /2411.1 โครงสร้างของแอดเดรส IPv4โครงสร้างของแอดเดรส IPv4ส่วนเครือข่ายและส่วนโฮสต์• แอดเดรส IPv4 คือแอดเดรสแบบลำดับชั้นขนาด 32 บิต ซึ่งประกอบด้วยส่วนเครือข่ายและส่วนโฮสต์• ในการพิจารณาส่วนเครือข่ายเทียบกับส่วนโฮสต์ คุณต้องดูที่สตรีม 32 บิต• ซับเน็ตมาสก์จะถูกใช้เพื่อกำหนดส่วนเครือข่ายและส่วนโฮสต์โครงสร้างของแอดเดรส IPv4ซับเน็ตมาสก์• เพื่อระบุส่วนเครือข่ายและส่วนโฮสต์ของแอดเดรส IPv4 จะมีการเปรียบเทียบซับเน็ตมาสก์กับแอดเดรส IPv4 ทีละบิต จากซ้ายไปขวา• กระบวนการที่ใช้ในการระบุส่วนเครือข่ายและส่วนโฮสต์เรียกว่า ANDingโครงสร้างของแอดเดรส IPv4ความยาวพรีฟิกซ์• ความยาวพรีฟิกซ์เป็นวิธีการที่ยุ่งยากน้อยกว่าในการระบุแอดเดรสซับเน็ตมาสก์• ความยาวพรีฟิกซ์คือจำนวนบิตที่ตั้งค่าเป็น 1 ในซับเน็ตมาสก์• เขียนในรูปแบบ “สัญกรณ์ทับ” ดังนั้นให้นับจำนวนบิตในซับเน็ตมาสก์และนำหน้าด้วยเครื่องหมายทับโครงสร้างของแอดเดรส IPv4การกำหนดเครือข่าย: การทำ AND แบบตรรกะ• การดำเนินการแบบบูลีน Logical AND ถูกใช้ในการกำหนดแอดเดรสเครือข่าย• Logical AND คือการเปรียบเทียบสองบิต โดยที่เฉพาะ 1 AND 1 เท่านั้นที่ให้ผลลัพธ์เป็น 1 และการรวมกันอื่น ๆ จะให้ผลลัพธ์เป็น 0• 1 AND 1 = 1, 0 AND 1 = 0, 1 AND 0 = 0, 0 AND 0 = 0• 1 = จริง และ 0 = เท็จ• เพื่อระบุแอดเดรสเครือข่าย แอดเดรส IPv4 ของโฮสต์จะถูกทำ AND แบบตรรกะทีละบิตกับซับเน็ตมาสก์เพื่อระบุแอดเดรสเครือข่ายโครงสร้างของแอดเดรส IPv4วิดีโอ – แอดเดรสเครือข่าย, โฮสต์ และบรอดคาสต์วิดีโอนี้จะครอบคลุมหัวข้อต่อไปนี้:• แอดเดรสเครือข่าย• แอดเดรสบรอดคาสต์• โฮสต์ที่ใช้งานได้ตัวแรก• โฮสต์ที่ใช้งานได้ตัวสุดท้ายโครงสร้างของแอดเดรส IPv4แอดเดรสเครือข่าย, โฮสต์ และบรอดคาสต์• ภายในแต่ละเครือข่ายจะมีแอดเดรส IP สามประเภท:• แอดเดรสเครือข่าย• แอดเดรสโฮสต์• แอดเดรสบรอดคาสต์11.2 IPv4 ยูนิคาสต์, บรอดคาสต์ และมัลติคาสต์IPv4 ยูนิคาสต์, บรอดคาสต์ และมัลติคาสต์ยูนิคาสต์• การส่งแบบยูนิคาสต์คือการส่งแพ็กเก็ตไปยังแอดเดรส IP ปลายทางเดียว• ตัวอย่างเช่น พีซีที่ 172.16.4.1 ส่งแพ็กเก็ตยูนิคาสต์ไปยังเครื่องพิมพ์ที่ 172.16.4.253IPv4 ยูนิคาสต์, บรอดคาสต์ และมัลติคาสต์บรอดคาสต์• การส่งแบบบรอดคาสต์คือการส่งแพ็กเก็ตไปยังแอดเดรส IP ปลายทางอื่นๆ ทั้งหมด• ตัวอย่างเช่น พีซีที่ 172.16.4.1 ส่งแพ็กเก็ตบรอดคาสต์ไปยังโฮสต์ IPv4 ทั้งหมดIPv4 ยูนิคาสต์, บรอดคาสต์ และมัลติคาสต์มัลติคาสต์• การส่งแบบมัลติคาสต์คือการส่งแพ็กเก็ตไปยังกลุ่มแอดเดรสมัลติคาสต์• ตัวอย่างเช่น พีซีที่ 172.16.4.1 ส่งแพ็กเก็ตมัลติคาสต์ไปยังแอดเดรสกลุ่มมัลติคาสต์ 224.10.10.511.3 ประเภทของแอดเดรส IPv4ประเภทของแอดเดรส IPv4แอดเดรส IPv4 สาธารณะและส่วนตัว• ตามที่กำหนดใน RFC 1918 แอดเดรส IPv4 สาธารณะจะถูกกำหนดเส้นทางทั่วโลกผ่านเราเตอร์ของผู้ให้บริการอินเทอร์เน็ต (ISP)• อย่างไรก็ตาม แอดเดรสส่วนตัวไม่สามารถกำหนดเส้นทางทั่วโลกได้• แอดเดรสส่วนตัวเป็นกลุ่มแอดเดรสทั่วไปที่องค์กรส่วนใหญ่ใช้เพื่อกำหนดแอดเดรส IPv4 ให้กับโฮสต์ภายใน• แอดเดรส IPv4 ส่วนตัวนั้นไม่ซ้ำกันและสามารถใช้งานภายในเครือข่ายใดก็ได้ประเภทของแอดเดรส IPv4การกำหนดเส้นทางไปยังอินเทอร์เน็ต• Network Address Translation (NAT) แปลงแอดเดรส IPv4 ส่วนตัวเป็นแอดเดรส IPv4 สาธารณะ• โดยทั่วไป NAT จะเปิดใช้งานบนเราเตอร์ที่ขอบเครือข่ายที่เชื่อมต่อกับอินเทอร์เน็ต• มันจะแปลแอดเดรสส่วนตัวภายในเป็นแอดเดรส IP สาธารณะทั่วโลกประเภทของแอดเดรส IPv4แอดเดรส IPv4 สำหรับการใช้งานพิเศษแอดเดรส Loopback• 127.0.0.0 /8 (127.0.0.1 ถึง 127.255.255.254)• โดยทั่วไปจะระบุเป็น 127.0.0.1 เท่านั้น• ใช้บนโฮสต์เพื่อทดสอบว่า TCP/IP ทำงานอยู่หรือไม่แอดเดรส Link-Local• 169.254.0.0 /16 (169.254.0.1 ถึง 169.254.255.254)• รู้จักกันทั่วไปว่าเป็นแอดเดรส Automatic Private IP Addressing (APIPA) หรือแอดเดรสที่กำหนดด้วยตนเอง• ใช้โดยไคลเอนต์ Windows DHCP เพื่อกำหนดค่าตัวเองเมื่อไม่มีเซิร์ฟเวอร์ DHCPประเภทของแอดเดรส IPv4การกำหนดแอดเดรสแบบคลาสในอดีตRFC 790 (ปี 1981) จัดสรรแอดเดรส IPv4 เป็นคลาสต่างๆ• Class A (0.0.0.0/8 ถึง 127.0.0.0/8)• Class B (128.0.0.0 /16 – 191.255.0.0 /16)• Class C (192.0.0.0 /24 – 223.255.255.0 /24)• Class D (224.0.0.0 ถึง 239.0.0.0)• Class E (240.0.0.0 – 255.0.0.0)• การกำหนดแอดเดรสแบบคลาสทำให้สิ้นเปลืองแอดเดรส IPv4 จำนวนมากการจัดสรรแอดเดรสแบบคลาสถูกแทนที่ด้วยการกำหนดแอดเดรสแบบไร้คลาส ซึ่งไม่สนใจกฎของคลาส (A, B, C)ประเภทของแอดเดรส IPv4การจัดสรรหมายเลขไอพี• Internet Assigned Numbers Authority (IANA) เป็นผู้จัดการและจัดสรรกลุ่มแอดเดรส IPv4 และ IPv6 ให้กับ Regional Internet Registries (RIRs) ทั้งห้าแห่ง• RIRs มีหน้าที่รับผิดชอบในการจัดสรรแอดเดรส IP ให้กับ ISP ซึ่งจะจัดหากลุ่มแอดเดรส IPv4 ให้กับ ISP ขนาดเล็กและองค์กรต่างๆ ต่อไป11.4 การแบ่งส่วนเครือข่ายการแบ่งส่วนเครือข่ายโดเมนบรอดคาสต์และการแบ่งส่วน• โปรโตคอลหลายตัวใช้การบรอดคาสต์หรือมัลติคาสต์ (เช่น ARP ใช้บรอดคาสต์เพื่อค้นหาอุปกรณ์อื่น, โฮสต์ส่ง DHCP discover broadcasts เพื่อค้นหาเซิร์ฟเวอร์ DHCP)• สวิตช์จะส่งต่อบรอดคาสต์ออกทุกอินเทอร์เฟซ ยกเว้นอินเทอร์เฟซที่รับเข้ามา• อุปกรณ์เดียวที่หยุดการบรอดคาสต์คือเราเตอร์• เราเตอร์จะไม่ส่งต่อบรอดคาสต์• แต่ละอินเทอร์เฟซของเราเตอร์จะเชื่อมต่อกับโดเมนบรอดคาสต์ และบรอดคาสต์จะถูกส่งต่อเฉพาะภายในโดเมนบรอดคาสต์นั้นๆการแบ่งส่วนเครือข่ายปัญหากับโดเมนบรอดคาสต์ขนาดใหญ่• ปัญหาของโดเมนบรอดคาสต์ขนาดใหญ่คือโฮสต์เหล่านี้สามารถสร้างบรอดคาสต์มากเกินไปและส่งผลเสียต่อเครือข่าย• วิธีแก้ปัญหาคือการลดขนาดของเครือข่ายเพื่อสร้างโดเมนบรอดคาสต์ที่เล็กลงในกระบวนการที่เรียกว่าการทำซับเน็ต• การแบ่งแอดเดรสเครือข่าย 172.16.0.0 /16 ออกเป็นสองซับเน็ต โดยแต่ละซับเน็ตมีผู้ใช้ 200 คน: 172.16.0.0 /24 และ 172.16.1.0 /24• บรอดคาสต์จะถูกส่งต่อเฉพาะภายในโดเมนบรอดคาสต์ที่เล็กกว่าเท่านั้นการแบ่งส่วนเครือข่ายเหตุผลในการแบ่งส่วนเครือข่าย• การทำซับเน็ตช่วยลดทราฟฟิกโดยรวมของเครือข่ายและปรับปรุงประสิทธิภาพของเครือข่าย• สามารถใช้เพื่อใช้นโยบายความปลอดภัยระหว่างซับเน็ต• การทำซับเน็ตช่วยลดจำนวนอุปกรณ์ที่ได้รับผลกระทบจากทราฟฟิกบรอดคาสต์ที่ผิดปกติ• ซับเน็ตถูกใช้ด้วยเหตุผลหลายประการ รวมถึงตาม:สถานที่กลุ่มหรือฟังก์ชันประเภทของอุปกรณ์11.5 การทำซับเน็ตเครือข่าย IPv4การทำซับเน็ตเครือข่าย IPv4การทำซับเน็ตที่ขอบเขตอ็อกเท็ต• เครือข่ายสามารถทำซับเน็ตได้ง่ายที่สุดที่ขอบเขตอ็อกเท็ตของ /8, /16 และ /24• สังเกตว่าการใช้ความยาวพรีฟิกซ์ที่ยาวขึ้นจะลดจำนวนโฮสต์ต่อซับเน็ตการทำซับเน็ตเครือข่าย IPv4การทำซับเน็ตที่ขอบเขตอ็อกเท็ต (ต่อ)• ในตารางแรก 10.0.0.0/8 ถูกทำซับเน็ตโดยใช้ /16 และในตารางที่สองใช้มาสก์ /24การทำซับเน็ตเครือข่าย IPv4การทำซับเน็ตภายในขอบเขตอ็อกเท็ต• อ้างอิงตารางเพื่อดูหกวิธีในการทำซับเน็ตเครือข่าย /24การทำซับเน็ตเครือข่าย IPv4วิดีโอ – ซับเน็ตมาสก์• วิดีโอนี้จะสาธิตกระบวนการทำซับเน็ตการทำซับเน็ตเครือข่าย IPv4วิดีโอ – การทำซับเน็ตด้วย Magic Number• วิดีโอนี้จะสาธิตการทำซับเน็ตด้วย magic numberการทำซับเน็ตเครือข่าย IPv4Packet Tracer – การทำซับเน็ตเครือข่าย IPv4ใน Packet Tracer นี้ คุณจะได้ทำสิ่งต่อไปนี้:• ออกแบบแผนการทำซับเน็ตเครือข่าย IPv4• กำหนดค่าอุปกรณ์• ทดสอบและแก้ไขปัญหาเครือข่าย11.6 การทำซับเน็ตพรีฟิกซ์ /16 และ /8การทำซับเน็ตพรีฟิกซ์ /16 และ /8สร้างซับเน็ตด้วยพรีฟิกซ์ /16• ตารางนี้เน้นสถานการณ์ที่เป็นไปได้ทั้งหมดสำหรับการทำซับเน็ตพรีฟิกซ์ /16การทำซับเน็ตพรีฟิกซ์ /16 และ /8สร้าง 100 ซับเน็ตด้วยพรีฟิกซ์ /16พิจารณาองค์กรขนาดใหญ่ที่ต้องการซับเน็ตอย่างน้อย 100 ซับเน็ต และได้เลือกใช้แอดเดรสส่วนตัว 172.16.0.0/16 เป็นแอดเดรสเครือข่ายภายใน• รูปภาพแสดงจำนวนซับเน็ตที่สามารถสร้างได้เมื่อยืมบิตจากอ็อกเท็ตที่สามและอ็อกเท็ตที่สี่• สังเกตว่าตอนนี้มีโฮสต์บิตให้ยืมได้ถึง 14 บิต (กล่าวคือ สองบิตสุดท้ายไม่สามารถยืมได้)เพื่อให้เป็นไปตามข้อกำหนด 100 ซับเน็ตสำหรับองค์กร จะต้องยืม 7 บิต (คือ 2 ยกกำลัง 7 เท่ากับ 128 ซับเน็ต) (สำหรับซับเน็ตทั้งหมด 128 ซับเน็ต)การทำซับเน็ตพรีฟิกซ์ /16 และ /8สร้าง 1000 ซับเน็ตด้วยพรีฟิกซ์ /8พิจารณา ISP ขนาดเล็กที่ต้องการ 1000 ซับเน็ตสำหรับลูกค้า โดยใช้แอดเดรสเครือข่าย 10.0.0.0/8 ซึ่งหมายความว่ามี 8 บิตในส่วนเครือข่าย และมีโฮสต์บิต 24 บิตที่สามารถยืมมาเพื่อทำซับเน็ตได้• รูปภาพแสดงจำนวนซับเน็ตที่สามารถสร้างได้เมื่อยืมบิตจากอ็อกเท็ตที่สองและสาม• สังเกตว่าตอนนี้มีโฮสต์บิตให้ยืมได้ถึง 22 บิต (กล่าวคือ สองบิตสุดท้ายไม่สามารถยืมได้)เพื่อให้เป็นไปตามข้อกำหนด 1000 ซับเน็ตสำหรับองค์กร จะต้องยืม 10 บิต (คือ 2 ยกกำลัง 10 เท่ากับ 1024 ซับเน็ต) (สำหรับซับเน็ตทั้งหมด 128 ซับเน็ต)การทำซับเน็ตพรีฟิกซ์ /16 และ /8วิดีโอ – การทำซับเน็ตข้ามหลายอ็อกเท็ตวิดีโอนี้จะสาธิตการสร้างซับเน็ตข้ามหลายอ็อกเท็ตการทำซับเน็ตพรีฟิกซ์ /16 และ /8แล็บ – คำนวณซับเน็ต IPv4ในแล็บนี้ คุณจะทำตามวัตถุประสงค์ต่อไปนี้:• ส่วนที่ 1: กำหนดการทำซับเน็ตแอดเดรส IPv4• ส่วนที่ 2: คำนวณการทำซับเน็ตแอดเดรส IPv411.7 การทำซับเน็ตเพื่อให้ตรงตามความต้องการการทำซับเน็ตเพื่อให้ตรงตามความต้องการการทำซับเน็ตพื้นที่แอดเดรส IPv4 ส่วนตัวเทียบกับสาธารณะเครือข่ายขององค์กรจะมี:• อินทราเน็ต - เครือข่ายภายในของบริษัท โดยทั่วไปจะใช้แอดเดรส IPv4 ส่วนตัว• DMZ – เซิร์ฟเวอร์ของบริษัทที่หันหน้าเข้าหาอินเทอร์เน็ต อุปกรณ์ใน DMZ ใช้แอดเดรส IPv4 สาธารณะ• บริษัทสามารถใช้ 10.0.0.0/8 และทำซับเน็ตที่ขอบเขตเครือข่าย /16 หรือ /24• อุปกรณ์ DMZ จะต้องถูกกำหนดค่าด้วยแอดเดรส IP สาธารณะการทำซับเน็ตเพื่อให้ตรงตามความต้องการลดการใช้แอดเดรสโฮสต์ IPv4 ที่ไม่จำเป็นให้เหลือน้อยที่สุดและเพิ่มจำนวนซับเน็ตให้ได้มากที่สุดมีข้อควรพิจารณาสองประการเมื่อวางแผนซับเน็ต:• จำนวนแอดเดรสโฮสต์ที่ต้องการสำหรับแต่ละเครือข่าย• จำนวนซับเน็ตแต่ละซับเน็ตที่ต้องการการทำซับเน็ตเพื่อให้ตรงตามความต้องการตัวอย่าง: การทำซับเน็ต IPv4 อย่างมีประสิทธิภาพ• ในตัวอย่างนี้ สำนักงานใหญ่ของบริษัทได้รับการจัดสรรแอดเดรสเครือข่ายสาธารณะ 172.16.0.0/22 (10 โฮสต์บิต) จาก ISP ซึ่งให้แอดเดรสโฮสต์ได้ 1,022 แอดเดรส• มีห้าสาขา ดังนั้นจึงมีการเชื่อมต่ออินเทอร์เน็ตห้าจุด ซึ่งหมายความว่าองค์กรต้องการ 10 ซับเน็ต โดยซับเน็ตที่ใหญ่ที่สุดต้องการ 40 แอดเดรส• ได้จัดสรร 10 ซับเน็ตด้วยซับเน็ตมาสก์ /26 (คือ 255.255.255.192)การทำซับเน็ตเพื่อให้ตรงตามความต้องการPacket Tracer – สถานการณ์การทำซับเน็ตใน Packet Tracer นี้ คุณจะได้ทำสิ่งต่อไปนี้:• ออกแบบแผนการกำหนดแอดเดรส IP• กำหนดแอดเดรส IP ให้กับอุปกรณ์เครือข่ายและตรวจสอบการเชื่อมต่อ11.8 VLSMVLSMวิดีโอ – พื้นฐาน VLSM• วิดีโอนี้จะอธิบายพื้นฐานของ VLSMVLSMวิดีโอ – ตัวอย่าง VLSM• วิดีโอนี้จะสาธิตการสร้างซับเน็ตที่เฉพาะเจาะจงตามความต้องการของเครือข่ายVLSMการอนุรักษ์แอดเดรส IPv4จากโทโพโลยีที่กำหนด จำเป็นต้องมี 7 ซับเน็ต (คือ สี่ LAN และสามลิงก์ WAN) และจำนวนโฮสต์ที่ใหญ่ที่สุดอยู่ในอาคาร D ซึ่งมี 28 โฮสต์• มาสก์ /27 จะให้ 8 ซับเน็ต โดยแต่ละซับเน็ตมีแอดเดรส IP ของโฮสต์ 30 แอดเดรส และดังนั้นจึงสามารถรองรับโทโพโลยีนี้ได้VLSMการอนุรักษ์แอดเดรส IPv4 (ต่อ)อย่างไรก็ตาม ลิงก์ WAN แบบจุดต่อจุดต้องการเพียงสองแอดเดรสเท่านั้น ดังนั้นจึงสิ้นเปลืองแอดเดรสไป 28 แอดเดรสต่อลิงก์ รวมเป็นแอดเดรสที่ไม่ได้ใช้ทั้งหมด 84 แอดเดรส• การใช้แผนการทำซับเน็ตแบบดั้งเดิมกับสถานการณ์นี้ไม่มีประสิทธิภาพและสิ้นเปลืองมาก• VLSM ถูกพัฒนาขึ้นเพื่อหลีกเลี่ยงการสิ้นเปลืองแอดเดรสโดยทำให้เราสามารถทำซับเน็ตของซับเน็ตได้VLSMVLSM• ด้านซ้ายแสดงแผนการทำซับเน็ตแบบดั้งเดิม (คือใช้ซับเน็ตมาสก์เดียวกัน) ในขณะที่ด้านขวาแสดงให้เห็นว่า VLSM สามารถใช้เพื่อทำซับเน็ตของซับเน็ตและแบ่งซับเน็ตสุดท้ายออกเป็นแปดซับเน็ต /30 ได้อย่างไร• เมื่อใช้ VLSM ให้เริ่มต้นโดยตอบสนองความต้องการโฮสต์ของซับเน็ตที่ใหญ่ที่สุดก่อนเสมอ และทำซับเน็ตต่อไปจนกว่าความต้องการโฮสต์ของซับเน็ตที่เล็กที่สุดจะได้รับการตอบสนอง• โทโพโลยีผลลัพธ์ที่ใช้ VLSMVLSMการกำหนดแอดเดรสในโทโพโลยี VLSM• การใช้ซับเน็ต VLSM ทำให้เครือข่าย LAN และเครือข่ายระหว่างเราเตอร์สามารถกำหนดแอดเดรสได้โดยไม่มีการสิ้นเปลืองโดยไม่จำเป็นดังที่แสดงในแผนภาพโทโพโลยีเชิงตรรกะ11.9 การออกแบบเชิงโครงสร้างการออกแบบเชิงโครงสร้างการวางแผนแอดเดรสเครือข่าย IPv4การวางแผนเครือข่าย IP เป็นสิ่งสำคัญอย่างยิ่งในการพัฒนาโซลูชันที่สามารถขยายขนาดได้สำหรับเครือข่ายขององค์กร• ในการพัฒนาแผนการกำหนดแอดเดรส IPv4 ทั่วทั้งเครือข่าย คุณต้องทราบว่าต้องการซับเน็ตกี่ซับเน็ต, ซับเน็ตหนึ่งๆ ต้องการโฮสต์กี่โฮสต์, อุปกรณ์ใดบ้างที่เป็นส่วนหนึ่งของซับเน็ต, ส่วนใดของเครือข่ายของคุณที่ใช้แอดเดรสส่วนตัว และส่วนใดที่ใช้แอดเดรสสาธารณะ และปัจจัยกำหนดอื่นๆ อีกมากมายตรวจสอบความต้องการการใช้งานเครือข่ายขององค์กรและโครงสร้างของซับเน็ตที่จะถูกจัดวาง• ทำการศึกษาความต้องการของเครือข่ายโดยดูที่เครือข่ายทั้งหมดเพื่อกำหนดว่าแต่ละพื้นที่จะถูกแบ่งส่วนอย่างไร• กำหนดจำนวนซับเน็ตที่ต้องการและจำนวนโฮสต์ต่อซับเน็ต• กำหนดพูลแอดเดรส DHCP และพูล VLAN Layer 2การออกแบบเชิงโครงสร้างการกำหนดแอดเดรสอุปกรณ์ภายในเครือข่าย มีอุปกรณ์ประเภทต่างๆ ที่ต้องการแอดเดรส:• ไคลเอนต์ผู้ใช้ปลายทาง – ส่วนใหญ่ใช้ DHCP เพื่อลดข้อผิดพลาดและภาระของเจ้าหน้าที่สนับสนุนเครือข่าย ไคลเอนต์ IPv6 สามารถรับข้อมูลแอดเดรสโดยใช้ DHCPv6 หรือ SLAAC• เซิร์ฟเวอร์และอุปกรณ์ต่อพ่วง – อุปกรณ์เหล่านี้ควรมีแอดเดรส IP แบบคงที่ที่คาดเดาได้• เซิร์ฟเวอร์ที่เข้าถึงได้จากอินเทอร์เน็ต – เซิร์ฟเวอร์ต้องมีแอดเดรส IPv4 สาธารณะ ซึ่งส่วนใหญ่มักเข้าถึงโดยใช้ NAT• อุปกรณ์ตัวกลาง – อุปกรณ์เหล่านี้จะได้รับการกำหนดแอดเดรสเพื่อการจัดการเครือข่าย การตรวจสอบ และความปลอดภัย• เกตเวย์ – เราเตอร์และอุปกรณ์ไฟร์วอลล์เป็นเกตเวย์สำหรับโฮสต์ในเครือข่ายนั้นเมื่อพัฒนาแผนการกำหนดแอดเดรส IP โดยทั่วไปแนะนำให้มีรูปแบบที่กำหนดไว้ในการจัดสรรแอดเดรสให้กับอุปกรณ์แต่ละประเภทการออกแบบเชิงโครงสร้างPacket Tracer – การออกแบบและติดตั้ง VLSM สำหรับฝึกปฏิบัติใน Packet Tracer นี้ คุณจะได้ทำสิ่งต่อไปนี้:• ตรวจสอบความต้องการของเครือข่าย• ออกแบบแผนการกำหนดแอดเดรส VLSM• กำหนดแอดเดรส IP ให้กับอุปกรณ์และตรวจสอบการเชื่อมต่อ11.10 แบบฝึกหัดและแบบทดสอบท้ายบทการออกแบบเชิงโครงสร้างPacket Tracer – ออกแบบและติดตั้งแผนการกำหนดแอดเดรส VLSMใน Packet Tracer นี้ คุณจะได้ทำสิ่งต่อไปนี้:• ออกแบบแผนการกำหนดแอดเดรส IP แบบ VLSM ตามข้อกำหนดที่ให้มา• กำหนดค่าการกำหนดแอดเดรสบนอุปกรณ์เครือข่ายและโฮสต์• ตรวจสอบการเชื่อมต่อ IP• แก้ไขปัญหาการเชื่อมต่อตามที่ต้องการการออกแบบเชิงโครงสร้างแล็บ - ออกแบบและติดตั้งแผนการกำหนดแอดเดรส VLSMในแล็บนี้ คุณจะทำตามวัตถุประสงค์ต่อไปนี้:• ตรวจสอบความต้องการของเครือข่าย• ออกแบบแผนการกำหนดแอดเดรส VLSM• เดินสายและกำหนดค่าเครือข่าย IPv4แบบฝึกหัดและแบบทดสอบท้ายบทฉันได้เรียนรู้อะไรในบทนี้บ้าง?• โครงสร้างการกำหนดแอดเดรส IP ประกอบด้วยแอดเดรสเครือข่ายแบบลำดับชั้นขนาด 32 บิตที่ระบุเครือข่ายและส่วนของโฮสต์ อุปกรณ์เครือข่ายใช้กระบวนการที่เรียกว่า ANDing โดยใช้แอดเดรส IP และซับเน็ตมาสก์ที่เกี่ยวข้องเพื่อระบุส่วนของเครือข่ายและโฮสต์• แพ็กเก็ต IPv4 ปลายทางสามารถเป็นแบบยูนิคาสต์, บรอดคาสต์ และมัลติคาสต์• มีแอดเดรส IP ที่สามารถกำหนดเส้นทางได้ทั่วโลกตามที่ IANA กำหนด และมีช่วงแอดเดรสเครือข่าย IP ส่วนตัวสามช่วงที่ไม่สามารถกำหนดเส้นทางได้ทั่วโลก แต่สามารถใช้ได้ในเครือข่ายส่วนตัวภายในทั้งหมด• ลดโดเมนบรอดคาสต์ขนาดใหญ่โดยใช้ซับเน็ตเพื่อสร้างโดเมนบรอดคาสต์ที่เล็กลง ลดปริมาณการรับส่งข้อมูลโดยรวมของเครือข่าย และปรับปรุงประสิทธิภาพของเครือข่าย• สร้างซับเน็ต IPv4 โดยใช้บิตโฮสต์หนึ่งบิตหรือมากกว่าเป็นบิตเครือข่าย อย่างไรก็ตาม เครือข่ายจะถูกทำซับเน็ตได้ง่ายที่สุดที่ขอบเขตอ็อกเท็ต /8, /16 และ /24• เครือข่ายขนาดใหญ่สามารถทำซับเน็ตที่ขอบเขต /8 หรือ /16 ได้• ใช้ VLSM เพื่อลดจำนวนแอดเดรสโฮสต์ที่ไม่ได้ใช้ต่อซับเน็ตแบบฝึกหัดและแบบทดสอบท้ายบทฉันได้เรียนรู้อะไรในบทนี้บ้าง? (ต่อ)• VLSM อนุญาตให้แบ่งพื้นที่เครือข่ายออกเป็นส่วนที่ไม่เท่ากันได้ เริ่มต้นด้วยการตอบสนองความต้องการของโฮสต์ในซับเน็ตที่ใหญ่ที่สุดก่อนเสมอ และทำซับเน็ตต่อไปจนกว่าความต้องการของโฮสต์ในซับเน็ตที่เล็กที่สุดจะได้รับการตอบสนอง• เมื่อออกแบบแผนการกำหนดแอดเดรสเครือข่าย ให้พิจารณาถึงความต้องการภายใน, DMZ และภายนอก ใช้แผนการกำหนดแอดเดรส IP ภายในที่สอดคล้องกันโดยมีรูปแบบที่แน่นอนในการจัดสรรแอดเดรสให้กับอุปกรณ์แต่ละประเภท",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -280,
+        180
+      ],
+      "id": "07d9250d-f32f-41f3-9ee0-a4f2339d3e1c",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "candidates[0].content.parts[0].inlineData.data",
+        "options": {
+          "fileName": "",
+          "mimeType": "audio/wav"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        200,
+        180
+      ],
+      "id": "05295585-ad59-4bef-99fa-c45818de97ed",
+      "name": "audio_data"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Download File": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "File Created": {
+      "main": [
+        [
+          {
+            "node": "Set File ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "File Updated": {
+      "main": [
+        [
+          {
+            "node": "Set File ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set File ID": {
+      "main": [
+        [
+          {
+            "node": "Download File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract PDF Text": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Extract PDF Text",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [],
+        []
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "audio_data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "audio_data": {
+      "main": [
+        [
+          {
+            "node": "Upload file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "3cf817a2-ed30-4df5-91db-0ffc07b9f482",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "f5a7e3aea662e4d935378e208179bfe22e0aad21c171e2b33ed04a8a928ed119"
+  },
+  "id": "rVygYTTpOsmpRQ1l",
+  "tags": []
+}
